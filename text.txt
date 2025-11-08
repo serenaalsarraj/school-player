@@ -1,0 +1,190 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Editor</title>
+
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --text: #111;
+  --card: #f2f2f2;
+  --button: #3b82f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f0f;
+    --text: #fff;
+    --card: #1e1e1e;
+    --button: #2563eb;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 18px;
+  text-align: center;
+}
+
+.card {
+  background: var(--card);
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 14px;
+}
+
+input, button, textarea {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+}
+
+button {
+  background: var(--button);
+  color: white;
+  font-weight: bold;
+}
+
+iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+#lockscreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  z-index: 999;
+}
+
+#lockscreen input {
+  width: 60%;
+  text-align: center;
+  font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PASSCODE SCREEN -->
+<div id="lockscreen">
+  <h2>🔒 Enter Passcode</h2>
+  <input type="password" id="pass" maxlength="4" placeholder="0000">
+  <button onclick="checkPass()">Enter</button>
+</div>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/kx8k3q.mp3" type="audio/mpeg">
+</audio>
+<button onclick="toggleMusic()" style="width:auto;margin-top:5px;">🎵 Music ON/OFF</button>
+
+<!-- LOGO -->
+<h1>🎬 School Editor</h1>
+
+<!-- YOUTUBE SEARCH -->
+<div class="card">
+  <b>Search YouTube:</b>
+  <input id="search" placeholder="Type anything...">
+  <button onclick="searchYT()">Search</button>
+</div>
+
+<!-- YOUTUBE PLAYER -->
+<div class="card">
+  <b>YouTube Video ID:</b>
+  <input id="yt" placeholder="Example: dQw4w9WgXcQ">
+  <button onclick="loadYT()">Play YouTube</button>
+</div>
+
+<!-- TIKTOK PLAYER -->
+<div class="card">
+  <b>TikTok Link:</b>
+  <input id="tt" placeholder="Paste TikTok link">
+  <button onclick="loadTT()">Play TikTok</button>
+</div>
+
+<!-- PLAYER -->
+<div id="player"></div>
+<button onclick="goFullscreen()">⛶ Full Screen</button>
+
+<!-- NOTES BOX -->
+<div class="card">
+  <b>Notes / Comments:</b>
+  <textarea id="notes" rows="4" placeholder="Write your notes here..."></textarea>
+  <button onclick="saveNotes()">Save Notes</button>
+</div>
+
+<script async src="https://www.tiktok.com/embed.js"></script>
+<script>
+
+// PASSCODE SYSTEM
+function checkPass(){
+  if(document.getElementById("pass").value === "0000"){
+    document.getElementById("lockscreen").style.display = "none";
+  } else {
+    alert("Wrong Passcode!");
+  }
+}
+
+// MUSIC CONTROL
+function toggleMusic(){
+  const m = document.getElementById("music");
+  if(m.paused){ m.play(); } else { m.pause(); }
+}
+
+// YOUTUBE SEARCH
+function searchYT(){
+  let q = document.getElementById("search").value;
+  window.open("https://www.youtube.com/results?search_query=" + encodeURIComponent(q));
+}
+
+// LOAD YOUTUBE VIDEO
+function loadYT(){
+  let id = document.getElementById("yt").value.trim();
+  document.getElementById("player").innerHTML =
+    `<iframe id="vid" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`;
+}
+
+// LOAD TIKTOK
+function loadTT(){
+  let url = document.getElementById("tt").value.trim();
+  document.getElementById("player").innerHTML =
+    `<blockquote class="tiktok-embed" cite="${url}"><a href="${url}"></a></blockquote>`;
+}
+
+// FULLSCREEN
+function goFullscreen(){
+  let v = document.getElementById("vid");
+  if(v){ v.requestFullscreen(); }
+}
+
+// NOTES SAVE
+document.getElementById("notes").value = localStorage.getItem("notes") || "";
+function saveNotes(){
+  localStorage.setItem("notes", document.getElementById("notes").value);
+  alert("Notes saved!");
+}
+</script>
+
+</body>
+</html>
